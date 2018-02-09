@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "extract.js",
-  "bin": "./extract.js",
+  "bin": "extract.js",
   "dependencies": {
     "ast-monkey": "^7.3.3",
     "consolidate": "^0.14.5",

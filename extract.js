@@ -51,7 +51,7 @@ let renderPromises = vueFiles.map((file) => {
 Promise.all(renderPromises)
 .then((results) => {
   return results.map(({ file, html }) => {
-    return HTML.parse(html)    
+    return HTML.parse(html)
   })
 }).then((astTrees) => {
   let outputFolder = path.dirname(outputFile)
@@ -73,7 +73,7 @@ Promise.all(renderPromises)
           console.log(translation);
         }
       }
-      return current 
+      return current
     })
   })
   fs.writeFileSync(outputFile, result)
