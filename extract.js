@@ -51,6 +51,7 @@ let renderPromises = vueFiles.map((file) => {
 Promise.all(renderPromises)
 .then((results) => {
   return results.map(({ file, html }) => {
+    // console.log(html);
     return HTML.parse(html)
   })
 }).then((astTrees) => {
@@ -76,7 +77,7 @@ Promise.all(renderPromises)
       return current
     })
   })
-  fs.writeFileSync(outputFile, result)
+  fs.writeFileSync(outputFile, result.join('\n'))
 }).catch((error) => {
   console.log(error)
 })
