@@ -14,8 +14,8 @@ npx extract-vue-i18n -o extracted.txt -s src
 ## Options
 
 ```
--o      output file
--s      src folder (where your SFCs are)
+  --output, -o  The output file. It should be your template.pot       [required]
+  --src, -s     The source folder for vue/html/js files               [required]
 ```
 ----
 
