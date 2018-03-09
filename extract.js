@@ -6,8 +6,7 @@ const glob = require('glob')
 const consolidate = require('consolidate')
 const Promise = require('promise')
 const parseVue = require('vue-loader/lib/parser')
-const monkey = require('ast-monkey')
-const HTML = require('html-parse-stringify')
+const { uniq, compact } = require('lodash')
 
 const argv = require('yargs')
   .alias('output', 'o')
@@ -52,31 +51,22 @@ Promise.all(renderPromises)
 .then((results) => {
   return results.map(({ file, html }) => {
     // console.log(html);
-    return HTML.parse(html)
+    const pattern = /{{\s*\$t\(['"](.*)['"]\)\s*}}/
+    const result = (html.match(new RegExp(pattern, 'g')) || []).map(str => {
+      const [, match] = str.match(pattern) || []
+      return `${match}`
+    })
+    return compact(result).join('\n')
   })
-}).then((astTrees) => {
+}).then((matches) => {
   let outputFolder = path.dirname(outputFile)
 
   if (!fs.existsSync(outputFolder)) {
     fs.mkdirSync(outputFolder)
   }
 
-  const result = []
-  astTrees.forEach((astTree) => {
-    monkey.traverse(astTree, function (key, val, innerObj) {
-      const current = (val !== undefined) ? val : key
-      if (current.type === 'text') {
-        const pattern = /{{\s*\$t\(['"](.*)['"]\)\s*}}/
-        const match = current.content && current.content.match(pattern)
-        if (match) {
-          const [, translation] = match
-          result.push(translation)
-          console.log(translation);
-        }
-      }
-      return current
-    })
-  })
+  console.log(matches);
+  const result = uniq(matches)
   fs.writeFileSync(outputFile, result.join('\n'))
 }).catch((error) => {
   console.log(error)
